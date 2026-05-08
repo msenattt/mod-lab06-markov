@@ -18,7 +18,7 @@ int main() {
     
     std::cout << "Table entries: " << gen.getTableSize() << std::endl;
     
-    if (gen.generateToFile("gen.txt", MAXGEN)) {
+    if (gen.generateToFile("../result/gen.txt", MAXGEN)) {
         std::cout << "Text saved to result/gen.txt" << std::endl;
         
         std::string preview = gen.getGeneratedText(40);
