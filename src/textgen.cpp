@@ -30,8 +30,8 @@ void TextGenerator::build(std::istream& input) {
 
     for (int i = 0; i < prefixSize; i++) {
         if (!(input >> word)) return;
-        word.erase(std::remove_if(word.begin(), word.end(), 
-                   [](char c) { return std::ispunct(c) && c != '-'; }), 
+        word.erase(std::remove_if(word.begin(), word.end(),
+                   [](char c) { return std::ispunct(c) && c != '-'; }),
                    word.end());
         if (word.empty()) {
             i--;
@@ -41,8 +41,8 @@ void TextGenerator::build(std::istream& input) {
     }
 
     while (input >> word) {
-        word.erase(std::remove_if(word.begin(), word.end(), 
-                   [](char c) { return std::ispunct(c) && c != '-'; }), 
+        word.erase(std::remove_if(word.begin(), word.end(),
+                   [](char c) { return std::ispunct(c) && c != '-'; }),
                    word.end());
         if (word.empty()) continue;
         add(current, word);
@@ -66,7 +66,7 @@ std::string TextGenerator::generate(int maxWords) {
     bool found = false;
 
     for (const auto& entry : stateTable) {
-        if (!entry.first.empty() && !entry.first[0].empty() && 
+        if (!entry.first.empty() && !entry.first[0].empty() &&
             std::isupper(entry.first[0][0])) {
             current = entry.first;
             found = true;
@@ -93,7 +93,8 @@ std::string TextGenerator::generate(int maxWords) {
     while (wordCount < maxWords) {
         auto it = stateTable.find(current);
         if (it == stateTable.end() || it->second.empty()) {
-            std::uniform_int_distribution<size_t> prefDist(0, stateTable.size() - 1);
+            std::uniform_int_distribution<size_t> prefDist(
+                0, stateTable.size() - 1);
             auto randIt = stateTable.begin();
             std::advance(randIt, prefDist(rng));
             current = randIt->first;
@@ -107,11 +108,13 @@ std::string TextGenerator::generate(int maxWords) {
         }
 
         const std::vector<std::string>& suffixes = it->second;
-        std::uniform_int_distribution<int> sfxDist(0, static_cast<int>(suffixes.size()) - 1);
+        std::uniform_int_distribution<int> sfxDist(
+            0, static_cast<int>(suffixes.size()) - 1);
         std::string nextWord = suffixes[sfxDist(rng)];
 
         if (nextWord.empty()) {
-            std::uniform_int_distribution<size_t> prefDist(0, stateTable.size() - 1);
+            std::uniform_int_distribution<size_t> prefDist(
+                0, stateTable.size() - 1);
             auto randIt = stateTable.begin();
             std::advance(randIt, prefDist(rng));
             current = randIt->first;
