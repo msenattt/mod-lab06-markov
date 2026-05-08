@@ -24,7 +24,7 @@ class TextGenerator {
     void add(const prefix& pref, const std::string& suffix);
     void build(std::istream& input);
     std::string generate(int maxWords);
-    
+
  public:
     explicit TextGenerator(int npref = 2);
     bool loadFromFile(const std::string& filename);

@@ -1,9 +1,11 @@
 // Copyright 2024 <Copyright Owner>
 
+#include <algorithm>
 #include <string>
 #include <vector>
-#include <algorithm>
+
 #include <gtest/gtest.h>
+
 #include "textgen.h"
 
 TEST(TextGeneratorTest, MakePrefixFromWords) {
@@ -89,7 +91,7 @@ TEST(TextGeneratorTest, GeneratedTextLength) {
     gen.addEntry(TextGenerator::makePrefix({"у", "самого"}), "синего");
     gen.addEntry(TextGenerator::makePrefix({"самого", "синего"}), "моря");
     gen.addEntry(TextGenerator::makePrefix({"синего", "моря"}), "");
-    
+
     auto countWords = [](const std::string& s) {
         if (s.empty()) return 0;
         int n = 1;
