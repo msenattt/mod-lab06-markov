@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+#include <cctype>
+#include <algorithm>
 #include "textgen.h"
 
 TextGenerator::TextGenerator(int npref) {
@@ -16,7 +18,7 @@ void TextGenerator::add(const prefix& pref, const std::string& suffix) {
 
 prefix TextGenerator::makePrefix(const std::vector<std::string>& words) {
     prefix pref;
-    for (int i = 0; i < words.size(); i++) {
+    for (size_t i = 0; i < words.size(); i++) {
         pref.push_back(words[i]);
     }
     return pref;
@@ -28,10 +30,21 @@ void TextGenerator::build(std::istream& input) {
 
     for (int i = 0; i < prefixSize; i++) {
         if (!(input >> word)) return;
+        word.erase(std::remove_if(word.begin(), word.end(), 
+                   [](char c) { return std::ispunct(c) && c != '-'; }), 
+                   word.end());
+        if (word.empty()) {
+            i--;
+            continue;
+        }
         current.push_back(word);
     }
 
     while (input >> word) {
+        word.erase(std::remove_if(word.begin(), word.end(), 
+                   [](char c) { return std::ispunct(c) && c != '-'; }), 
+                   word.end());
+        if (word.empty()) continue;
         add(current, word);
         current.pop_front();
         current.push_back(word);
@@ -48,17 +61,29 @@ std::string TextGenerator::generate(int maxWords) {
     if (stateTable.empty()) {
         return "";
     }
-
-    prefix current = stateTable.begin()->first;
-
+    prefix current;
+    bool found = false;
+    for (const auto& entry : stateTable) {
+        if (!entry.first.empty() && !entry.first[0].empty() && 
+            std::isupper(entry.first[0][0])) {
+            current = entry.first;
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        current = stateTable.begin()->first;
+    }
     std::string result;
     int wordCount = 0;
 
-    for (int i = 0; i < current.size(); i++) {
+    for (size_t i = 0; i < current.size(); i++) {
         if (wordCount >= maxWords) break;
         if (wordCount > 0) result += " ";
         result += current[i];
         wordCount++;
+
+
     }
 
     if (wordCount >= maxWords) return result;
@@ -66,15 +91,24 @@ std::string TextGenerator::generate(int maxWords) {
     while (wordCount < maxWords) {
         auto it = stateTable.find(current);
         if (it == stateTable.end() || it->second.empty()) {
-            break;
+            std::uniform_int_distribution<size_t> prefDist(0, stateTable.size() - 1);
+            auto randIt = stateTable.begin();
+            std::advance(randIt, prefDist(rng));
+            current = randIt->first;
+            continue;
         }
 
         const std::vector<std::string>& suffixes = it->second;
-        std::uniform_int_distribution<int> sfxDist(0, suffixes.size() - 1);
+        std::uniform_int_distribution<int> sfxDist(0, static_cast<int>(suffixes.size()) - 1);
         std::string nextWord = suffixes[sfxDist(rng)];
-
-        if (nextWord.empty()) break;
-
+        if (nextWord.empty()) {
+            std::uniform_int_distribution<size_t> prefDist(0, stateTable.size() - 1);
+            auto randIt = stateTable.begin();
+            std::advance(randIt, prefDist(rng));
+            current = randIt->first;
+            result += ".";
+            continue;
+        }
         result += " " + nextWord;
         wordCount++;
 

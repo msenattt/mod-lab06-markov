@@ -1,10 +1,9 @@
 // Copyright 2024 <Copyright Owner>
 
-#include <algorithm>
+#include <gtest/gtest.h>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
+#include <algorithm>
 
 #include "textgen.h"
 

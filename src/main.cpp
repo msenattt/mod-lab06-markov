@@ -6,7 +6,7 @@
 
 int main() {
     const int NPREF = 2;
-    const int MAXGEN = 1000;
+    const int MAXGEN = 1500;
 
     std::cout << "=== Markov Chain Text Generator ===" << std::endl;
     std::cout << "Prefix size: " << NPREF << " words" << std::endl;
@@ -23,7 +23,7 @@ int main() {
 
     if (gen.generateToFile("../result/gen.txt", MAXGEN)) {
         std::cout << "Text saved to result/gen.txt" << std::endl;
-    
+
         std::string preview = gen.getGeneratedText(40);
         std::cout << "\nPreview:\n" << preview << "..." << std::endl;
     } else {
