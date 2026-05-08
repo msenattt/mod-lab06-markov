@@ -1,6 +1,10 @@
+// Copyright 2024 <Copyright Owner>
+
+#include <string>
+#include <vector>
+#include <algorithm>
 #include <gtest/gtest.h>
 #include "textgen.h"
-#include <algorithm>
 
 TEST(TextGeneratorTest, MakePrefixFromWords) {
     std::vector<std::string> words = {"жил", "старик", "со", "своею"};

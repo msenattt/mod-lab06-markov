@@ -1,5 +1,7 @@
-#ifndef TEXTGEN_H
-#define TEXTGEN_H
+// Copyright 2024 <Copyright Owner>
+
+#ifndef INCLUDE_TEXTGEN_H_
+#define INCLUDE_TEXTGEN_H_
 
 #include <string>
 #include <deque>
@@ -15,7 +17,7 @@ typedef std::deque<std::string> prefix;
 typedef std::map<prefix, std::vector<std::string>> statetab;
 
 class TextGenerator {
-private:
+ private:
     statetab stateTable;
     int prefixSize;
     std::mt19937 rng;
@@ -23,8 +25,8 @@ private:
     void build(std::istream& input);
     std::string generate(int maxWords);
     
-public:
-    TextGenerator(int npref = 2);
+ public:
+    explicit TextGenerator(int npref = 2);
     bool loadFromFile(const std::string& filename);
     void loadFromString(const std::string& text);
     void addEntry(const prefix& pref, const std::string& suffix);
@@ -38,4 +40,4 @@ public:
     prefix getFirstPrefix() const;
 };
 
-#endif
+#endif // INCLUDE_TEXTGEN_H_

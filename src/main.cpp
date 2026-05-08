@@ -1,5 +1,8 @@
-#include "textgen.h"
+// Copyright 2024 <Copyright Owner>
+
+#include <string>
 #include <iostream>
+#include "textgen.h"
 
 int main() {
     const int NPREF = 2;

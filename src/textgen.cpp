@@ -1,3 +1,7 @@
+// Copyright 2024 <Copyright Owner>
+
+#include <string>
+#include <vector>
 #include "textgen.h"
 
 TextGenerator::TextGenerator(int npref) {
